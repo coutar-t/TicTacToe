@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  TicTacToeView.swift
 //  TicTacToe
 //
 //  Created by Thibaut Coutard on 15/12/2021.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ContentView: View {
+struct TicTacToeView: View {
 
 
     @ObservedObject var vm = TicTacToeViewModel()
@@ -36,31 +36,17 @@ struct ContentView: View {
                             vm.didTapCase(x: index/3, y: index%3)
                         }
                 }
-        }.padding()
+            }.padding()
+            Button("rejouer", action: {
+                vm.didTapResetGame()
+            })
         }
-//        HStack(alignment: .center) {
-//        ForEach(0..<vm.board.endIndex, id: \.self) { column in
-//
-//            VStack {
-//                ForEach(0..<vm.board[column].endIndex, id: \.self) { row in
-//                    Text(vm.board[column][row])
-//                    Text("|")
-//                }
-//            }
-//            .background(Color.blue)
-//            VStack {
-//                ForEach(0..<vm.board[column].endIndex, id: \.self) { row in
-//                    Text("-")
-//                }
-//            }
-//        }
-//        }
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        TicTacToeView()
 
     }
 }

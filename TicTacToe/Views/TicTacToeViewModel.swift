@@ -9,15 +9,14 @@ import Foundation
 
 class TicTacToeViewModel: ObservableObject {
 
-    let ticTacToe = TicTacToe()
+    private var ticTacToe: TicTacToe!
 
-    @Published var board: [[String]]
-    var players: [Player]
-    var currentPlayer: Int = 0
+    @Published var board: [[String]]!
+    private var players: [Player]!
+    private var currentPlayer: Int!
 
     init() {
-        board = ticTacToe.getBoard()
-        players = ticTacToe.players
+        self.ticTacToeSetup()
     }
 
     func didTapCase(x: Int, y: Int) {
@@ -28,6 +27,17 @@ class TicTacToeViewModel: ObservableObject {
         } catch let e {
             print(e.localizedDescription)
         }
+    }
+
+    func didTapResetGame() {
+        self.ticTacToeSetup()
+    }
+
+    private func ticTacToeSetup() {
+        ticTacToe = TicTacToe()
+        board = ticTacToe.getBoard()
+        players = ticTacToe.players
+        currentPlayer = 0
     }
 
 }
