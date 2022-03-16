@@ -21,6 +21,9 @@ struct TicTacToeView: View {
         VStack {
             Text("TicTacToe")
                 .font(.title)
+
+            Text(vm.gameStatus)
+                .font(.body)
             LazyVGrid(
                 columns: columns,
                 alignment: .center,
@@ -41,6 +44,12 @@ struct TicTacToeView: View {
                 vm.didTapResetGame()
             })
         }
+        .alert(isPresented: $vm.showAlert) {
+            Alert(title: Text("Error"),
+                  message: Text(vm.errorMessage),
+                  dismissButton: .default(Text("ok")))
+        }
+
     }
 }
 

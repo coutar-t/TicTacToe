@@ -12,11 +12,18 @@ class TicTacToeViewModel: ObservableObject {
     private var ticTacToe: TicTacToe!
 
     @Published var board: [[String]]!
+    @Published var gameStatus: String = ""
+    @Published var showAlert: Bool = false
+    var errorMessage: String = ""
     private var players: [Player]!
-    private var currentPlayer: Int!
+    private var currentPlayer: Int! {
+        didSet {
+            updateStatus()
+        }
+    }
 
     init() {
-        self.ticTacToeSetup()
+        ticTacToeSetup()
     }
 
     func didTapCase(x: Int, y: Int) {
@@ -25,12 +32,14 @@ class TicTacToeViewModel: ObservableObject {
             currentPlayer = (currentPlayer + 1) % players.count
             board = ticTacToe.getBoard()
         } catch let e {
-            print(e.localizedDescription)
+            showAlert = true
+
+            errorMessage = getMessageFromError(e)
         }
     }
 
     func didTapResetGame() {
-        self.ticTacToeSetup()
+        ticTacToeSetup()
     }
 
     private func ticTacToeSetup() {
@@ -39,5 +48,34 @@ class TicTacToeViewModel: ObservableObject {
         players = ticTacToe.players
         currentPlayer = 0
     }
+    
+    private func updateStatus() {
+        switch ticTacToe.state {
+        case .playing:
+            gameStatus = "Next Player : \(players[currentPlayer].mark)"
+        case .tie:
+            gameStatus = "Tie"
+        case .won(let player):
+            gameStatus = "Won by \(player.mark)"
+        }
+    }
 
+    private func getMessageFromError(_ e: Error) -> String {
+        if let tictactoeError = e as? TicTacToeError {
+            switch tictactoeError {
+            case .NotAPlayer:
+                return "You are not a player"
+            case .OutOfBounds:
+                return "The play is out of bounds"
+            case .AlreadyOccupied:
+                return "The spot is already taken"
+            case .NotPlayerTurn:
+                return "This is not your turn"
+            case .GameIsOver:
+                return "The game is over"
+            }
+        } else {
+            return e.localizedDescription
+        }
+    }
 }
